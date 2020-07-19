@@ -1,0 +1,42 @@
+
+server:
+  port: 88
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: login_route
+          uri: lb://customer
+          predicates:
+            - Path=/login/**
+#          filters:
+#            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: product_route
+          uri: lb://product
+          predicates:
+            - Path=/goods/**
+        - id: order_route
+          uri: lb://order
+          predicates:
+            - Path=/order/**
+        - id: spike_route
+          uri: lb://spike
+          predicates:
+            - Path=/spike/**
+  resources:
+    static-locations: classpath:/static/
+    cache:
+      period: 3600
+    chain:
+      cache: true
+      enabled: true
+      compressed: true
+      html-application-cache: true
+    add-mappings: true
+
